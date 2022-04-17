@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 import routes from "./Routes";
+import dotenv from "dotenv";
 import "reflect-metadata";
 
+dotenv.config();
 const app = express();
 
 app.use(express.json());
