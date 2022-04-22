@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 
 
 @Entity()
-class UsersModels {
+class Users {
     @PrimaryColumn({generated: "uuid"})
     id: String;
 
@@ -39,4 +39,4 @@ class UsersModels {
 
 }
 
-export default UsersModels;
+export default Users;
