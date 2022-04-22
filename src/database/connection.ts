@@ -1,6 +1,8 @@
+import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
-import UsersModels from '../app/Models/UsersModels';
+import Users from '../app/Models/UsersModels';
 
+config();
 const {
     DB_HOST,
     DB_USERNAME,
@@ -8,7 +10,7 @@ const {
     DB_PASSWORD,
 } = process.env;
 
-const Connection = new DataSource({
+export const AppDataSource = new DataSource({
     type: "postgres",
     host: DB_HOST,
     username: DB_USERNAME,
@@ -17,14 +19,6 @@ const Connection = new DataSource({
     synchronize: true,
     logging: true,
     entities: [
-        UsersModels
+        Users
     ],
 });
-
-
-export default Connection.initialize()
-    .then(() => {
-        console.log("DATABASE ON");
-    }).catch(err => {
-        console.log(err);
-    })
