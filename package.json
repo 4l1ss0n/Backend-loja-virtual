@@ -21,6 +21,6 @@
   },
   "scripts": {
     "start": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules",
-    "orm": "ts-node ./node_modules/typeorm/cli"
+    "orm": "ts-node ./node_modules/typeorm/cli -d ./src/database/connection.ts"
   }
 }
