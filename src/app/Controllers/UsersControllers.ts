@@ -23,9 +23,8 @@ class UsersControllers {
 
             return res.json({
                 success: true,
-                data: {
-                    dbResponse
-                }
+                data: dbResponse
+                
             });
         } catch (err) {
             console.log(err);
