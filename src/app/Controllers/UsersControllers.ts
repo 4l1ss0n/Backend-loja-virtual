@@ -1,17 +1,32 @@
 import { Request as Req, Response as Res } from "express";
+import {AppDataSource as Db} from "../../database/connection";
+import Users from "../Models/UsersModels";
 
 
 class UsersControllers {
     async Login(req: Req, res: Res): Promise<Res> {
         const credentials = req.headers.authorization;
         try {
+            const User = Db.getRepository(Users);
             if (!credentials) return res.status(401).json({err: "no credentials found"});
 
-            const [,dataHashed] = credentials.split(" ");
-            
+            const [,dataHashed] = credentials.split(" ");            
             const [email, password] = Buffer.from(dataHashed, 'base64').toString().split(":");
-            
-            return res.send("OK");
+
+            if (!email) return res.status(404).json({err: "missing datas"}); 
+
+            const dbResponse = await User.findOne({where: {email}});
+
+            if (!dbResponse) return res.status(404).json({err: "nothing account registered with this email"});
+
+            if (dbResponse.passwordHash !== password) return res.status(401).json({err: "incorrect password"});
+
+            return res.json({
+                success: true,
+                data: {
+                    dbResponse
+                }
+            });
         } catch (err) {
             console.log(err);
             return res.status(500).json({
@@ -31,8 +46,22 @@ class UsersControllers {
             birthday
         } = req.body;
         try {
-            
-            return res.send("OK");
+            const User = Db.getRepository(Users);
+            const user = User.create({
+                firstName,
+                lastName,
+                gender,
+                email,
+                passwordHash: password,
+                birthday,
+            });
+
+            await User.save(user);
+
+            return res.status(202).json({
+                success: true,
+                created: true
+            });
         } catch (err) {
             console.log(err);
             return res.status(500).json({
