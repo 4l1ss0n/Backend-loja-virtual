@@ -4,16 +4,18 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity()
 class Users {
     @PrimaryColumn({generated: "uuid"})
-    id: String;
+    id: string;
 
     @Column()
-    firstName: String;
+    firstName: string;
     
     @Column()
-    lastName: String;
+    lastName: string;
     
-    @Column()
-    birthday: Date;
+    @Column({
+        length: 10
+    })
+    birthday: String;
     
     @Column({
         enum: ["M", "F"],
@@ -22,10 +24,10 @@ class Users {
     gender: "M" | "F";
     
     @Column()
-    email: String;
+    email: string;
     
     @Column()
-    passwordHash: String;
+    passwordHash: string;
     
     @Column({
         default: new Date(Date.now())
