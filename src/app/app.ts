@@ -3,12 +3,19 @@ import cors from "cors";
 import routes from "./Routes";
 import dotenv from "dotenv";
 import "reflect-metadata";
-import Connection from '../database/connection';
+import {AppDataSource} from '../database/connection';
 
 dotenv.config();
 const app = express();
 
-Connection;
+AppDataSource.initialize().then(() => {
+    console.log("DB CONNECTED");
+}).catch(err => {
+    console.log({
+        local: "app.ts",
+        error: err 
+    });
+});
 
 app.use(express.json());
 app.use(cors());
