@@ -38,8 +38,14 @@ class AddressControllers {
             if (!id) return res.status(401).json({err: "missing datas"});
             const Addr = Db.getRepository(Address);
             const addrResponse = await Addr.findOne({
+                relations: {
+                    userId: true
+                },
                 where: {
-                    id
+                    id,
+                    userId: {
+                        id: userId
+                    }
                 }
             });
             return res.json({addrResponse});
