@@ -2,6 +2,7 @@ import { Request as Req, Response as Res } from "express";
 import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import Users from "../Models/UsersModels";
+import tokenGen from "../utils/tokenGen";
 
 
 class UsersControllers {
@@ -24,7 +25,11 @@ class UsersControllers {
 
             return res.json({
                 success: true,
-                data: dbResponse
+                data: {
+                    token: tokenGen({
+                        id: dbResponse.id
+                    })
+                }
                 
             });
         } catch (err) {
