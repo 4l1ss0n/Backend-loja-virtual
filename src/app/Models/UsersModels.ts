@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import Address from "./AddressModels";
+import CreditCard from "./CreditCardModels";
 
 
 @Entity()
@@ -32,13 +33,16 @@ class Users {
 
     @OneToMany(() => Address, address => address.userId)
     address: Address[];
+
+    @OneToMany(() => CreditCard, creditCard => creditCard.userId)
+    creditCard: CreditCard[];
     
-    @Column({
+    @CreateDateColumn({
         default: new Date(Date.now())
     })
     createdAt: Date;
     
-    @Column({
+    @UpdateDateColumn({
         default: new Date(Date.now()),
         onUpdate: "CASCADE"
     })
