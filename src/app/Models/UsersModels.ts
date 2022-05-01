@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import Address from "./AddressModels";
 
 
 @Entity()
 class Users {
-    @PrimaryColumn({generated: "uuid"})
+    @PrimaryColumn()
     id: string;
 
     @Column()
@@ -28,6 +29,9 @@ class Users {
     
     @Column()
     passwordHash: string;
+
+    @OneToMany(() => Address, address => address.userId)
+    address: Address[];
     
     @Column({
         default: new Date(Date.now())
@@ -35,7 +39,8 @@ class Users {
     createdAt: Date;
     
     @Column({
-        default: new Date(Date.now())
+        default: new Date(Date.now()),
+        onUpdate: "CASCADE"
     })
     updatedAt: Date;
 
