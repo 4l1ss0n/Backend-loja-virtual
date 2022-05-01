@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
+import Address from '../app/Models/AddressModels';
 import Users from '../app/Models/UsersModels';
 
 config();
@@ -19,6 +20,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [
-        Users
+        Users,
+        Address
     ],
 });
