@@ -1,13 +1,14 @@
 import { Router } from "express";
 import CreditCardControllers from "../Controllers/CreditCardControllers";
+import authorization from "../Middlewares/authorization";
 
 const creditCard = Router();
 
 const Card = new CreditCardControllers();
 
-creditCard.get("/card", Card.Index);
-creditCard.get("/card/:id", Card.Show);
-creditCard.post("/card/create", Card.Create);
-creditCard.delete("/card/delete", Card.Delete);
+creditCard.get("/card", authorization, Card.Index);
+creditCard.get("/card/:id", authorization, Card.Show);
+creditCard.post("/card/create", authorization, Card.Create);
+creditCard.delete("/card/delete", authorization, Card.Delete);
 
 export default creditCard;
