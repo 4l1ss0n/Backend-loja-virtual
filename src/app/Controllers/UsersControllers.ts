@@ -1,4 +1,5 @@
 import { Request as Req, Response as Res } from "express";
+import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import Users from "../Models/UsersModels";
 
@@ -47,6 +48,7 @@ class UsersControllers {
         try {
             const User = Db.getRepository(Users);
             const user = User.create({
+                id: uuid(),
                 firstName,
                 lastName,
                 gender,
