@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import Users from "./UsersModels";
 
 
@@ -22,12 +22,12 @@ class Address {
     @Column()
     complements: string;
   
-    @Column({
+    @CreateDateColumn({
         default: new Date(Date.now())
     })
     createdAt: Date;
     
-    @Column({
+    @UpdateDateColumn({
         default: new Date(Date.now()),
         onUpdate: "CASCADE"
     })
