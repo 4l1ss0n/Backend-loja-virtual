@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import Address from '../app/Models/AddressModels';
+import CreditCard from '../app/Models/CreditCardModels';
 import Users from '../app/Models/UsersModels';
 
 config();
@@ -21,6 +22,7 @@ export const AppDataSource = new DataSource({
     logging: false,
     entities: [
         Users,
-        Address
+        Address,
+        CreditCard
     ],
 });
