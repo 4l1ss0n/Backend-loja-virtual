@@ -65,8 +65,8 @@ class UsersControllers {
             await User.save(user);
 
             return res.status(202).json({
-                success: true,
-                created: true
+                created: true,
+                token: tokenGen({id: user.id})
             });
         } catch (err) {
             console.log(err);
