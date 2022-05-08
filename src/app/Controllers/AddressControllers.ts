@@ -2,11 +2,12 @@ import { Request as Req, Response as Res } from "express";
 import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import Address from "../Models/AddressModels";
+import * as yup from "yup";
 
 
 class AddressControllers {
     async Index(req: Req, res: Res): Promise<Res> {
-        const userID =  req.query.id as string;
+        const userID =  req.body.auth.id;
         try {
             if (!userID) return res.json({addrResponse: []});
             const Addr = Db.getRepository(Address);
@@ -33,7 +34,7 @@ class AddressControllers {
 
     async Show(req: Req, res: Res): Promise<Res> {
         const id = req.params.id as string;
-        const userId = req.query.id as string;
+        const userId = req.body.auth.id;
         try {
             if (!id) return res.status(401).json({err: "missing datas"});
             const Addr = Db.getRepository(Address);
@@ -60,7 +61,6 @@ class AddressControllers {
 
     async Create(req: Req, res: Res): Promise<Res> {
         const {
-            userId,
             addr,
             number,
             complements,
@@ -68,12 +68,23 @@ class AddressControllers {
         } = req.body;
 
         try {
+            if (!(
+                await yup.string().required().isValid(addr) &&
+                await yup.number().required().isValid(number) &&
+                await yup.string().required().isValid(complements) &&
+                await yup.number().required().isValid(postalCode)
+            )) {
+                console.log("dados faltando");
+                return res.status(406).json({
+                    err: "missing or invalid datas"
+                });
+            };
 
             const Addr = Db.getRepository(Address);
 
             const createAddr = Addr.create({
                 id: uuid(),
-                userId,
+                userId: req.body.auth.id,
                 addr,
                 number,
                 complements,

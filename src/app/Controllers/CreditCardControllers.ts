@@ -2,11 +2,12 @@ import { Request as Req, Response as Res } from "express";
 import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import CreditCard from "../Models/CreditCardModels";
+import * as yup from "yup";
 
 
 class CreditCardControllers {
     async Index(req: Req, res: Res): Promise<Res> {
-        const userID = req.query.id as string;
+        const userID = req.body.auth.id;
         try {
             if (!userID) return res.json({addrResponse: []});
             const Card = Db.getRepository(CreditCard);
@@ -33,7 +34,7 @@ class CreditCardControllers {
 
     async Show(req: Req, res: Res): Promise<Res> {
         const id = req.params.id as string;
-        const userId = req.query.id as string;
+        const userId = req.body.auth.id;
         try {
             if (!id) return res.status(401).json({err: "missing datas"});
             const Card = Db.getRepository(CreditCard);
@@ -60,14 +61,26 @@ class CreditCardControllers {
 
     async Create(req: Req, res: Res): Promise<Res> {
         const {
-            userId,
             fullName,
             cardNumber,
             ccv,
             cpf
         } = req.body;
 
+        const userId = req.body.auth.id;
+
         try {
+            if (!(
+                await yup.string().required().isValid(fullName) &&
+                await yup.string().required().isValid(cardNumber) &&
+                await yup.string().required().isValid(cpf) &&
+                await yup.number().required().isValid(ccv)
+            )) {
+                console.log("dados faltando");
+                return res.status(406).json({
+                    err: "missing or invalid datas"
+                });
+            };
             
             const Card = Db.getRepository(CreditCard);
 

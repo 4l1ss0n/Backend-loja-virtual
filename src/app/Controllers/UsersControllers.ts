@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import Users from "../Models/UsersModels";
 import tokenGen from "../utils/tokenGen";
+import * as yup from "yup";
 
 
 class UsersControllers {
@@ -51,6 +52,20 @@ class UsersControllers {
             birthday
         } = req.body;
         try {
+            if (!(
+                await yup.string().email().required().isValid(email) &&
+                await yup.string().required().isValid(firstName) &&
+                await yup.string().required().isValid(lastName) &&
+                await yup.string().required().isValid(gender) &&
+                await yup.string().required().isValid(password) &&
+                await yup.string().required().isValid(birthday) 
+            )) {
+                console.log("dados faltando");
+                return res.status(406).json({
+                    err: "missing or invalid datas"
+                });
+            };
+
             const User = Db.getRepository(Users);
             const user = User.create({
                 id: uuid(),
