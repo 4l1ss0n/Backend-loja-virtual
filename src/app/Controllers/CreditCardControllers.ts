@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import CreditCard from "../Models/CreditCardModels";
 import * as yup from "yup";
+import { CreditCardViews } from "../Views/CardsViews";
 
 
 class CreditCardControllers {
@@ -22,7 +23,7 @@ class CreditCardControllers {
                 }
             });
 
-            return res.json({creditCardResponse});
+            return res.json(CreditCardViews(creditCardResponse));
         } catch (err) {
             console.log(err);
             return res.status(500).json({
@@ -49,7 +50,9 @@ class CreditCardControllers {
                     }
                 }
             });
-            return res.json({creditCardResponse});
+            return res.json(
+                creditCardResponse? CreditCardViews([creditCardResponse]): []
+            );
         } catch (err) {
             console.log(err);
             return res.status(500).json({
@@ -97,7 +100,6 @@ class CreditCardControllers {
 
             return res.json({
                 created: true,
-                id: createCard.id
             });
         } catch (err) {
             console.log(err);

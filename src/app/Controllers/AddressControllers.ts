@@ -3,6 +3,8 @@ import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import Address from "../Models/AddressModels";
 import * as yup from "yup";
+import { AddrViews } from "../Views/AddressViews";
+
 
 
 class AddressControllers {
@@ -22,7 +24,7 @@ class AddressControllers {
                 }
             })
 
-            return res.json({addrResponse});
+            return res.json(AddrViews(addrResponse));
         } catch (err) {
             console.log(err);
             return res.status(500).json({
@@ -49,7 +51,10 @@ class AddressControllers {
                     }
                 }
             });
-            return res.json({addrResponse});
+            
+            return res.json(
+                addrResponse? AddrViews([addrResponse]): []
+            );
         } catch (err) {
             console.log(err);
             return res.status(500).json({
@@ -95,7 +100,6 @@ class AddressControllers {
 
             return res.status(201).json({
                 created: true,
-                id: createAddr.id
             });
         } catch (err) {
             console.log(err);

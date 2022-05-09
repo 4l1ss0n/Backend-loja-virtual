@@ -1,9 +1,11 @@
 import { Request as Req, Response as Res } from "express";
 import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
+import * as yup from "yup";
+
 import Users from "../Models/UsersModels";
 import tokenGen from "../utils/tokenGen";
-import * as yup from "yup";
+import {UserView} from "../Views/UsersViews";
 
 
 class UsersControllers {
@@ -25,13 +27,11 @@ class UsersControllers {
             if (dbResponse.passwordHash !== password) return res.status(401).json({err: "incorrect password"});
 
             return res.json({
-                success: true,
-                data: {
-                    token: tokenGen({
-                        id: dbResponse.id
-                    })
-                }
-                
+                created: true,
+                user: UserView({
+                    user: dbResponse,
+                    token: tokenGen({id: dbResponse.id})
+                })
             });
         } catch (err) {
             console.log(err);
@@ -81,7 +81,10 @@ class UsersControllers {
 
             return res.status(202).json({
                 created: true,
-                token: tokenGen({id: user.id})
+                user: UserView({
+                    user,
+                    token: tokenGen({id: user.id})
+                })
             });
         } catch (err) {
             console.log(err);
