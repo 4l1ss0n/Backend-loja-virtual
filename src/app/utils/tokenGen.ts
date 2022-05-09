@@ -6,7 +6,7 @@ interface Type {
     id: string;
 }
 
-export default (payload: Type) => (
+export default (payload: Type): string => (
     sign(payload, SECRET || '1234', {
         expiresIn: '10m',
     })

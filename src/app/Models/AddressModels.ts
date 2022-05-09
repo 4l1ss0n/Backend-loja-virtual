@@ -14,10 +14,10 @@ class Address {
     addr: string;
     
     @Column()
-    number: Number;
+    number: number;
 
     @Column()
-    postalCode: Number;
+    postalCode: number;
     
     @Column()
     complements: string;
