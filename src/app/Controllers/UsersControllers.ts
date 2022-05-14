@@ -2,10 +2,12 @@ import { Request as Req, Response as Res } from "express";
 import { v4 as uuid } from "uuid";
 import {AppDataSource as Db} from "../../database/connection";
 import * as yup from "yup";
+import nodemailer from "nodemailer";
 
 import Users from "../Models/UsersModels";
 import tokenGen from "../utils/tokenGen";
 import {UserView} from "../Views/UsersViews";
+import core from "../emails/core";
 
 
 class UsersControllers {
@@ -109,6 +111,41 @@ class UsersControllers {
 
     async Delete(req: Req, res: Res): Promise<Res> {
         try {
+            return res.send("OK");
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                'err-path' : "Users - Login",
+                'err-msg': err 
+            })
+        }
+    }
+
+    async ForgotPassword(req: Req, res: Res): Promise<Res> {
+        const email = req.query.email as string;
+        try {
+            if (!(await yup.string().email().required().isValid(email))) {
+                return res.status(406).json({
+                    err: "missing or invalid datas"
+                })
+            }
+
+            const user = Db.getRepository(Users);
+            const accountExistent = await user.findOne({
+                where: {
+                    email
+                }
+            })
+            if (!accountExistent) return res.status(404).json({
+                err: "email not found"
+            })
+            
+            await core({
+                email: accountExistent.email,
+                id: accountExistent.id,
+                name: accountExistent.firstName + " " +  accountExistent.lastName
+            })
+
             return res.send("OK");
         } catch (err) {
             console.log(err);
